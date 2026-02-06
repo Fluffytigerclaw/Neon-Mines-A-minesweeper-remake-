@@ -16,7 +16,6 @@ Whether you are a casual player looking for a quick visual treat or a hardcore s
 * **Dynamic Gameplay:** Fluid animations and responsive controls make every move feel impactful.
 * **Multiple Difficulty Modes:** From "Spark" (Easy) to "Overload" (Hardcore).
 * **Timer & Scoring System:** Race against the clock to beat your personal best.
-* **Custom Sound Design:** [Optional: Mention if you have sound effects/music] immersive synth-wave sound effects.
 
 ---
 
@@ -56,6 +55,6 @@ To get a local copy up and running, follow these simple steps.
 
 ## 📧 Contact
 
-**Fluffy** - editingfluffy@gmail.com
+**Fluffy** - editingfluffy@gmail
 
-Project Link: https://github.com/Fluffytigerclaw/Neon-Mines-A-minesweeper-remake
+Project Link: https://github.com/Fluffytigerclaw/Neon-Mines-A-minesweeper-remake-
