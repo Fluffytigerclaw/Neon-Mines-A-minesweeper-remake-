@@ -1,0 +1,320 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Neon Mines: Cinematic</title>
+    <style>
+        :root {
+            --bg: #020617;
+            --accent: #22d3ee;
+            --accent-glow: rgba(47, 15, 224, 0.6);
+            --danger: #f43f5e;
+            --gold: #e69a16;
+            --cell-size: 42px;
+            --container-width: 480px;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
+            color: #f8fafc;
+            font-family: 'Inter', system-ui, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- INTRO ANIMATIONS --- */
+        #intro-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 100; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .neon-title {
+            font-size: 3rem; font-weight: 900; letter-spacing: 8px;
+            color: var(--accent); text-shadow: 0 0 20px var(--accent-glow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.05); } }
+
+        /* --- UI COMPONENTS --- */
+        .container {
+            width: 95vw; max-width: var(--container-width);
+            background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px);
+            border-radius: 28px; padding: 30px; border: 1px solid rgba(255,255,255,0.1);
+            text-align: center; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        body.pc-expanded { --container-width: 800px; --cell-size: 48px; }
+        .hidden { display: none !important; }
+
+        input {
+            background: #0f172a; border: 1px solid var(--accent); color: white;
+            padding: 12px; border-radius: 8px; width: 85%; margin: 8px 0;
+        }
+
+        .glow-btn {
+            transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer; background: rgba(255,255,255,0.05); color: white;
+            padding: 14px; border-radius: 12px; font-weight: bold; width: 100%; margin-top: 10px;
+        }
+        
+        .glow-btn:hover { box-shadow: 0 0 15px var(--accent-glow); border-color: var(--accent); transform: scale(1.02); }
+
+        .viewport { width: 100%; overflow: auto; border-radius: 16px; background: #000; padding: 12px; border: 1px solid rgba(255,255,255,0.1); }
+        #grid { display: grid; gap: 5px; margin: 0 auto; width: max-content; }
+        .cell { width: var(--cell-size); height: var(--cell-size); background: #1e293b; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; }
+        .cell.rev { background: #f1f5f9; color: #0f172a; }
+        .cell.mine { background: var(--danger); box-shadow: 0 0 15px var(--danger); }
+        .cell.flag { background: var(--gold); color: #000; }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay">
+        <div class="neon-title">NEON MINES</div>
+        <div id="demo-grid" style="display: grid; grid-template-columns: repeat(5, 30px); gap: 5px; margin-top: 30px; opacity: 0.5;">
+            </div>
+        <p style="color: var(--accent); margin-top: 20px; font-size: 0.8rem; letter-spacing: 2px;">INITIALIZING SYSTEMS...</p>
+    </div>
+
+    <div id="auth-screen" class="container hidden">
+        <h2 style="color: var(--accent);">USER AUTH</h2>
+        <input type="email" id="signup-email" placeholder="Gmail Address">
+        <input type="password" id="signup-pass" placeholder="Password">
+        <button class="glow-btn" style="background: var(--accent); color: #000;" onclick="handleAuth(false)">SIGN IN</button>
+        <div style="margin: 15px 0; color: #64748b; font-size: 0.8rem;">— OR —</div>
+        <button class="glow-btn" onclick="handleAuth(true)">PLAY AS GUEST</button>
+    </div>
+
+    <div id="menu" class="container hidden">
+        <h2 style="color: var(--accent); letter-spacing: 4px;">MAIN LOBBY</h2>
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; text-align: left; margin-bottom: 20px;">
+            <b style="color:var(--gold)">BEST TIMES:</b>
+            <div style="font-size: 0.8rem; margin-top: 5px;">
+                EASY: <span id="best-easy">---</span> | MED: <span id="best-med">---</span> | HARD: <span id="best-hard">---</span>
+            </div>
+        </div>
+        <div style="display:flex; gap:10px; margin-bottom: 15px;">
+            <button id="pc-opt" class="glow-btn" style="flex:1" onclick="setDevice('pc')">💻 PC</button>
+            <button id="mob-opt" class="glow-btn" style="flex:1" onclick="setDevice('mobile')">📱 MOBILE</button>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px;">
+            <button id="btn-easy" class="glow-btn" onclick="setDiff(8, 10, 'easy')">EASY</button>
+            <button id="btn-med" class="glow-btn" onclick="setDiff(12, 25, 'med')">MED</button>
+            <button id="btn-hard" class="glow-btn" onclick="setDiff(16, 50, 'hard')">HARD</button>
+        </div>
+        <button class="glow-btn" style="background: var(--accent); color: #000;" onclick="launchGame()">PLAY NOW</button>
+    </div>
+
+    <div id="game" class="container hidden">
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-family:monospace; background:#000; padding:10px; border-radius:12px;">
+            <span style="color:var(--gold)">🚩 <span id="m-left">0</span></span>
+            <span id="game-status" style="color:var(--accent)">ACTIVE</span>
+            <span style="color:var(--accent)">⏱ <span id="timer">000</span></span>
+        </div>
+        <div class="viewport"><div id="grid"></div></div>
+        <div style="display:flex; gap:10px; margin-top:15px;">
+            <button id="mobile-toggle" class="glow-btn hidden" style="flex:1; margin:0;" onclick="toggleFlag()">⛏ DIGGING</button>
+            <button class="glow-btn" style="flex:1; margin:0;" onclick="toMenu()">EXIT</button>
+            <button class="glow-btn" style="flex:1; margin:0;" onclick="initBoard()">RESET</button>
+        </div>
+    </div>
+
+    <script>
+        let mode = 'pc', cfg = { s: 8, m: 10, d: 'easy' }, grid = [], active = false, time = 0, first = true, flagging = false, loop;
+        let flagsUsed = 0;
+
+        // --- INTRO SEQUENCE ---
+        function runIntro() {
+            const demo = document.getElementById('demo-grid');
+            for(let i=0; i<25; i++) {
+                let d = document.createElement('div');
+                d.style.cssText = "width:30px; height:30px; background:#1e293b; border-radius:4px;";
+                demo.appendChild(d);
+                setTimeout(() => { d.style.background = (i%3===0) ? 'var(--accent)' : 'var(--danger)'; }, i * 100);
+            }
+            setTimeout(() => {
+                document.getElementById('intro-overlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('intro-overlay').classList.add('hidden');
+                    document.getElementById('auth-screen').classList.remove('hidden');
+                }, 1000);
+            }, 3000);
+        }
+
+        // --- AUTH & SAVING ---
+        function handleAuth(isGuest) {
+            if(!isGuest && !document.getElementById('signup-email').value) return alert("Email Required");
+            localStorage.setItem('neon_logged_in', 'true');
+            loadScores();
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('menu').classList.remove('hidden');
+        }
+
+        function loadScores() {
+            const saved = localStorage.getItem('neon_best_scores');
+            if (saved) {
+                const s = JSON.parse(saved);
+                document.getElementById('best-easy').innerText = s.easy ? s.easy + 's' : '---';
+                document.getElementById('best-med').innerText = s.med ? s.med + 's' : '---';
+                document.getElementById('best-hard').innerText = s.hard ? s.hard + 's' : '---';
+            }
+        }
+
+        function setDevice(d) {
+            mode = d;
+            document.body.classList.toggle('pc-expanded', d === 'pc');
+            document.getElementById('pc-opt').style.background = d==='pc' ? 'var(--accent)' : '';
+            document.getElementById('pc-opt').style.color = d==='pc' ? '#000' : '#fff';
+            document.getElementById('mob-opt').style.background = d==='mobile' ? 'var(--accent)' : '';
+            document.getElementById('mob-opt').style.color = d==='mobile' ? '#000' : '#fff';
+            document.getElementById('mobile-toggle').classList.toggle('hidden', d==='pc');
+        }
+
+        function setDiff(s, m, d) {
+            cfg = { s, m, d };
+            ['btn-easy', 'btn-med', 'btn-hard'].forEach(id => document.getElementById(id).style.borderColor = '');
+            document.getElementById('btn-'+d).style.borderColor = 'var(--accent)';
+        }
+
+        function launchGame() {
+            document.getElementById('menu').classList.add('hidden');
+            document.getElementById('game').classList.remove('hidden');
+            initBoard();
+        }
+
+        function toMenu() {
+            clearInterval(loop);
+            loadScores();
+            document.getElementById('game').classList.add('hidden');
+            document.getElementById('menu').classList.remove('hidden');
+        }
+
+        function toggleFlag() {
+            flagging = !flagging;
+            document.getElementById('mobile-toggle').innerText = flagging ? "🚩 FLAGGING" : "⛏ DIGGING";
+            document.getElementById('mobile-toggle').classList.toggle('active', flagging);
+        }
+
+        // --- GAME CORE ---
+        function initBoard() {
+            const b = document.getElementById('grid'); b.innerHTML = '';
+            b.style.gridTemplateColumns = `repeat(${cfg.s}, var(--cell-size))`;
+            grid = []; active = true; time = 0; first = true; flagsUsed = 0;
+            clearInterval(loop);
+            document.getElementById('timer').innerText = "000";
+            document.getElementById('m-left').innerText = cfg.m;
+            document.getElementById('game-status').innerText = "READY";
+
+            for (let r=0; r<cfg.s; r++) {
+                grid[r] = [];
+                for (let c=0; c<cfg.s; c++) {
+                    const el = document.createElement('div');
+                    el.className = 'cell';
+                    el.onclick = () => handleTap(r, c, false);
+                    el.oncontextmenu = (e) => { e.preventDefault(); if(mode==='pc') handleTap(r, c, true); };
+                    b.appendChild(el);
+                    grid[r][c] = { r, c, mine: false, rev: false, flag: false, el };
+                }
+            }
+        }
+
+        function handleTap(r, c, isFlag) {
+            if (!active) return;
+            const cell = grid[r][c];
+            let actualFlag = isFlag || (mode==='mobile' && flagging);
+
+            if (actualFlag) {
+                if (cell.rev) return;
+                cell.flag = !cell.flag;
+                cell.el.classList.toggle('flag');
+                cell.el.innerText = cell.flag ? "🚩" : "";
+                flagsUsed += cell.flag ? 1 : -1;
+                document.getElementById('m-left').innerText = cfg.m - flagsUsed;
+                return;
+            }
+
+            if (first) {
+                first = false;
+                spawnMines(r, c);
+                loop = setInterval(() => { time++; document.getElementById('timer').innerText = time.toString().padStart(3, '0'); }, 1000);
+            }
+            reveal(r, c);
+        }
+
+        function spawnMines(exR, exC) {
+            let p = 0;
+            while (p < cfg.m) {
+                let r = Math.floor(Math.random()*cfg.s), c = Math.floor(Math.random()*cfg.s);
+                if (!grid[r][c].mine && (Math.abs(r-exR) > 1 || Math.abs(c-exC) > 1)) { grid[r][c].mine = true; p++; }
+            }
+        }
+
+        function reveal(r, c) {
+            if (!active || grid[r][c].rev || grid[r][c].flag) return;
+            const cell = grid[r][c];
+            cell.rev = true; cell.el.classList.add('rev');
+            if (cell.mine) {
+                cell.el.classList.add('mine'); cell.el.innerText = "💣";
+                end(false);
+            } else {
+                let n = checkMines(r, c);
+                if (n > 0) { cell.el.innerText = n; cell.el.classList.add('n'+n); }
+                else {
+                    for (let i=-1; i<=1; i++) {
+                        for (let j=-1; j<=1; j++) {
+                            let rr=r+i, cc=c+j;
+                            if (rr>=0 && rr<cfg.s && cc>=0 && cc<cfg.s) reveal(rr, cc);
+                        }
+                    }
+                }
+                let win = true;
+                grid.flat().forEach(c => { if(!c.mine && !c.rev) win = false; });
+                if (win) end(true);
+            }
+        }
+
+        function checkMines(r, c) {
+            let n = 0;
+            for (let i=-1; i<=1; i++) {
+                for (let j=-1; j<=1; j++) {
+                    let rr=r+i, cc=c+j;
+                    if (rr>=0 && rr<cfg.s && cc>=0 && cc<cfg.s && grid[rr][cc].mine) n++;
+                }
+            }
+            return n;
+        }
+
+        function end(won) {
+            active = false; clearInterval(loop);
+            if (won) {
+                saveHighScore(cfg.d, time);
+                document.getElementById('game-status').innerText = "WIN";
+            } else {
+                document.getElementById('game-status').innerText = "FAIL";
+                grid.flat().forEach(c => { if(c.mine) { c.el.classList.add('mine'); c.el.innerText="💣"; }});
+            }
+        }
+
+        function saveHighScore(diff, score) {
+            let s = JSON.parse(localStorage.getItem('neon_best_scores') || '{"easy":null,"med":null,"hard":null}');
+            if (!s[diff] || score < s[diff]) {
+                s[diff] = score;
+                localStorage.setItem('neon_best_scores', JSON.stringify(s));
+            }
+        }
+
+        window.onload = () => {
+            runIntro();
+            setDevice('pc'); setDiff(8, 10, 'easy');
+        };
+    </script>
+</body>
+</html>
