@@ -1,6 +1,6 @@
 # 🔷 Neon Mines
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue) ![Status](https://img.shields.io/badge/status-active-neon)
+![Version](https://img.shields.io/badge/version-0.5-blue) ![Status](https://img.shields.io/badge/status-active-neon)
 
 > **A strategic, high-voltage twist on the classic mine-clearing genre.**
 
