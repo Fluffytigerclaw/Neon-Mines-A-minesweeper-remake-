@@ -1,6 +1,6 @@
 # 🔷 Neon Mines
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue) ![License](https://img.shields.io/badge/license-MIT-green) ![Status](https://img.shields.io/badge/status-active-neon)
+![Version](https://img.shields.io/badge/version-1.0.0-blue) ![Status](https://img.shields.io/badge/status-active-neon)
 
 > **A strategic, high-voltage twist on the classic mine-clearing genre.**
 
@@ -38,11 +38,8 @@ Whether you are a casual player looking for a quick visual treat or a hardcore s
 To get a local copy up and running, follow these simple steps.
 
 ### Installation
+1. Download
 
-1.  Clone the repo:
-    ```sh
-    git clone https://github.com/Fluffytigerclaw/Neon-Mines-A-minesweeper-remake-
-    ```
 2.  Open Run the game
    It is that easy
 ---
@@ -54,24 +51,6 @@ To get a local copy up and running, follow these simple steps.
 - [ ] Add "Infinite Mode"
 - [ ] Implement global leaderboards
 - [ ] Mobile support
-
----
-
-## 🤝 Contributing
-
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1.  Fork the Project
-2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the Branch (`git push origin feature/AmazingFeature`)
-5.  Open a Pull Request
-
----
-
-## 📝 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
