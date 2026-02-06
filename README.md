@@ -41,21 +41,10 @@ To get a local copy up and running, follow these simple steps.
 
 1.  Clone the repo:
     ```sh
-    git clone [https://github.com/YourUsername/neon-mines.git](https://github.com/YourUsername/neon-mines.git)
+    git clone https://github.com/Fluffytigerclaw/Neon-Mines-A-minesweeper-remake-
     ```
-2.  Navigate to the project directory:
-    ```sh
-    cd neon-mines
-    ```
-3.  Install dependencies (if applicable):
-    ```sh
-    pip install -r requirements.txt
-    ```
-4.  Run the game:
-    ```sh
-    python main.py
-    ```
-
+2.  Open Run the game
+   It is that easy
 ---
 
 ## 🗺️ Roadmap
