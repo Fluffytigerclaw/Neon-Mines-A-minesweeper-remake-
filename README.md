@@ -20,15 +20,6 @@ Whether you are a casual player looking for a quick visual treat or a hardcore s
 
 ---
 
-## 📸 Screenshots
-
-| Main Menu | Gameplay | Game Over |
-|:---:|:---:|:---:|
-| ![Menu Screenshot](path/to/image1.png) | ![Gameplay Screenshot](path/to/image2.png) | ![Game Over Screenshot](path/to/image3.png) |
-
-*(Note: Replace `path/to/image.png` with actual links to your screenshots)*
-
----
 
 ## 🕹️ How to Play
 
@@ -41,21 +32,10 @@ Whether you are a casual player looking for a quick visual treat or a hardcore s
 
 ---
 
-## 🛠️ Built With
-
-* **Language:** [e.g., Python / Lua / C#]
-* **Engine/Library:** [e.g., Pygame / LÖVE / Unity]
-* **Graphics:** Custom vector assets / [Tool Name]
-
----
 
 ## 🚀 Getting Started
 
 To get a local copy up and running, follow these simple steps.
-
-### Prerequisites
-
-* Make sure you have [Language/Software] installed.
 
 ### Installation
 
@@ -108,6 +88,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 📧 Contact
 
-**Your Name** - [YourEmail@example.com]
+**Fluffy** - editingfluffy@gmail.com
 
-Project Link: [https://github.com/YourUsername/neon-mines](https://github.com/YourUsername/neon-mines)
+Project Link: https://github.com/Fluffytigerclaw/Neon-Mines-A-minesweeper-remake
